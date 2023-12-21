@@ -123,7 +123,7 @@ ostream &operator<<(ostream &out, const bigint &number)
 {
     if (number.number_sign == sign::zero)
     {
-        out << '0';
+        out << '0' << '\n';
         return out;
     }
     else if (number.number_sign == sign::negative)
