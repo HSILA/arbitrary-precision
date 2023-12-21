@@ -89,7 +89,10 @@ bigint::bigint(const string inputString)
         fillDigits(inputString.substr(1, inputString.length() - 1));
     }
     else
+    {
+        numberSign = sign::positive;
         fillDigits(inputString);
+    }
 }
 
 bool bigint::isDigit(const string inputString)
@@ -133,7 +136,6 @@ ostream &operator<<(ostream &out, const bigint &number)
     return out;
 }
 
-
 bool bigint::operator==(const bigint &rhs) const
 {
     if ((digits.size() != rhs.digits.size()) or (numberSign != rhs.numberSign))
@@ -144,6 +146,7 @@ bool bigint::operator==(const bigint &rhs) const
     return true;
 }
 
-bool operator!=(const bigint &lhs, const bigint &rhs){
+bool operator!=(const bigint &lhs, const bigint &rhs)
+{
     return !(lhs == rhs);
 }
