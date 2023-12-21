@@ -24,8 +24,8 @@ public:
     bigint &operator+=(const bigint &);
     bool operator==(const bigint &) const;
     friend ostream &operator<<(ostream &, const bigint &);
-    inline static invalid_argument invalid_string = invalid_argument("The input string does not represent an integer number!");
-    
+    inline static invalid_argument non_digit = invalid_argument("The input string contains non digit characters!");
+    inline static invalid_argument leading_zeros = invalid_argument("The input number cannot have leading zeros!");
 
 private:
     sign number_sign;
@@ -77,7 +77,7 @@ bigint::bigint(const string inputString)
             digits.push_back(0);
         }
         else
-            throw invalid_string;
+            throw leading_zeros;
     }
     else if (inputString[0] == '-')
     {
@@ -107,9 +107,9 @@ bool bigint::is_digit(const string inputString)
 void bigint::fill_digits(const string inputString)
 {
     if (inputString[0] == '0')
-        throw invalid_string;
+        throw leading_zeros;
     else if (!is_digit(inputString))
-        throw invalid_string;
+        throw non_digit;
 
     digits.resize(inputString.length());
 
