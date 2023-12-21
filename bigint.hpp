@@ -25,17 +25,18 @@ public:
     bool operator==(const bigint &) const;
     friend ostream &operator<<(ostream &, const bigint &);
     inline static invalid_argument invalid_string = invalid_argument("The input string does not represent an integer number!");
+    
 
 private:
-    sign numberSign;
+    sign number_sign;
     vector<uint8_t> digits;
-    void fillDigits(const string);
-    bool isDigit(const string);
+    void fill_digits(const string);
+    bool is_digit(const string);
 };
 
 bigint::bigint()
 {
-    numberSign = sign::zero;
+    number_sign = sign::zero;
     digits.push_back(0);
 }
 
@@ -43,19 +44,19 @@ bigint::bigint(const int64_t number)
 {
     if (number == 0)
     {
-        numberSign = sign::zero;
+        number_sign = sign::zero;
         digits.push_back(0);
     }
     else
     {
         if (number < 0)
-            numberSign = sign::negative;
+            number_sign = sign::negative;
         else
-            numberSign = sign::positive;
+            number_sign = sign::positive;
         uint64_t temp = static_cast<uint64_t>(abs(number));
-        size_t numberOfDigits = static_cast<size_t>(log10(temp) + 1);
+        size_t number_of_digits = static_cast<size_t>(log10(temp) + 1);
         size_t cursor = 0;
-        digits.resize(numberOfDigits);
+        digits.resize(number_of_digits);
 
         while (temp != 0)
         {
@@ -72,7 +73,7 @@ bigint::bigint(const string inputString)
     {
         if (inputString.length() == 1)
         {
-            numberSign = sign::zero;
+            number_sign = sign::zero;
             digits.push_back(0);
         }
         else
@@ -80,22 +81,22 @@ bigint::bigint(const string inputString)
     }
     else if (inputString[0] == '-')
     {
-        numberSign = sign::negative;
-        fillDigits(inputString.substr(1, inputString.length() - 1));
+        number_sign = sign::negative;
+        fill_digits(inputString.substr(1, inputString.length() - 1));
     }
     else if (inputString[0] == '+')
     {
-        numberSign = sign::positive;
-        fillDigits(inputString.substr(1, inputString.length() - 1));
+        number_sign = sign::positive;
+        fill_digits(inputString.substr(1, inputString.length() - 1));
     }
     else
     {
-        numberSign = sign::positive;
-        fillDigits(inputString);
+        number_sign = sign::positive;
+        fill_digits(inputString);
     }
 }
 
-bool bigint::isDigit(const string inputString)
+bool bigint::is_digit(const string inputString)
 {
     for (const char &c : inputString)
         if (!isdigit(c))
@@ -103,11 +104,11 @@ bool bigint::isDigit(const string inputString)
     return true;
 }
 
-void bigint::fillDigits(const string inputString)
+void bigint::fill_digits(const string inputString)
 {
     if (inputString[0] == '0')
         throw invalid_string;
-    else if (!isDigit(inputString))
+    else if (!is_digit(inputString))
         throw invalid_string;
 
     digits.resize(inputString.length());
@@ -120,12 +121,12 @@ void bigint::fillDigits(const string inputString)
 
 ostream &operator<<(ostream &out, const bigint &number)
 {
-    if (number.numberSign == sign::zero)
+    if (number.number_sign == sign::zero)
     {
         out << '0';
         return out;
     }
-    else if (number.numberSign == sign::negative)
+    else if (number.number_sign == sign::negative)
         out << '-';
     for (size_t i = number.digits.size(); i > 0; i--)
     {
@@ -138,7 +139,7 @@ ostream &operator<<(ostream &out, const bigint &number)
 
 bool bigint::operator==(const bigint &rhs) const
 {
-    if ((digits.size() != rhs.digits.size()) or (numberSign != rhs.numberSign))
+    if ((digits.size() != rhs.digits.size()) or (number_sign != rhs.number_sign))
         return false;
     for (size_t i = 0; i < digits.size(); ++i)
         if (digits[i] != rhs.digits[i])
