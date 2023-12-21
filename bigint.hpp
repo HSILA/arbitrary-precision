@@ -23,6 +23,7 @@ public:
 
     bigint &operator+=(const bigint &);
     bool operator==(const bigint &) const;
+    bool operator<(const bigint &) const;
     friend ostream &operator<<(ostream &, const bigint &);
     inline static invalid_argument non_digit = invalid_argument("The input string contains non digit characters!");
     inline static invalid_argument leading_zeros = invalid_argument("The input number cannot have leading zeros!");
@@ -150,4 +151,67 @@ bool bigint::operator==(const bigint &rhs) const
 bool operator!=(const bigint &lhs, const bigint &rhs)
 {
     return !(lhs == rhs);
+}
+
+bool bigint::operator<(const bigint &rhs) const
+{
+    if (*this == rhs)
+        return false;
+
+    switch (number_sign)
+    {
+    case sign::negative:
+        if (rhs.number_sign == sign::negative)
+        {
+            if (digits.size() > rhs.digits.size())
+                return true;
+            else if (digits.size() < rhs.digits.size())
+                return false;
+            else
+            {
+                for (size_t i = digits.size(); i > 0; i--)
+                {
+                    if (digits[i - 1] > rhs.digits[i - 1])
+                        return true;
+                }
+                return false;
+            }
+        }
+        else
+            return true;
+        break;
+    case sign::zero:
+        if (rhs.number_sign == sign::positive)
+            return true;
+        else
+            return false;
+        break;
+    case sign::positive:
+        if (rhs.number_sign == sign::positive)
+        {
+            if (digits.size() > rhs.digits.size())
+                return false;
+            else if (digits.size() < rhs.digits.size())
+                return true;
+            else
+            {
+                for (size_t i = digits.size(); i > 0; i--)
+                {
+                    if (digits[i - 1] < rhs.digits[i - 1])
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        else
+            return false;
+        break;
+    }
+    return false;
+}
+
+bool operator>(const bigint &lhs, const bigint &rhs)
+{
+    return !((lhs < rhs) or (lhs == rhs));
 }
