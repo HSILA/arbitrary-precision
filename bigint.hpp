@@ -215,3 +215,13 @@ bool operator>(const bigint &lhs, const bigint &rhs)
 {
     return !((lhs < rhs) or (lhs == rhs));
 }
+
+bool operator>=(const bigint &lhs, const bigint &rhs)
+{
+    return !(lhs < rhs);
+}
+
+bool operator<=(const bigint &lhs, const bigint &rhs)
+{
+    return !(lhs > rhs);
+}
