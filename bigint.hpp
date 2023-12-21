@@ -27,7 +27,7 @@ public:
     inline static invalid_argument invalid_string = invalid_argument("The input string does not represent an integer number!");
 
 private:
-    sign sign;
+    sign numberSign;
     vector<uint8_t> digits;
     void fillDigits(const string);
     bool isDigit(const string);
@@ -35,7 +35,7 @@ private:
 
 bigint::bigint()
 {
-    sign = sign::zero;
+    numberSign = sign::zero;
     digits.push_back(0);
 }
 
@@ -43,15 +43,15 @@ bigint::bigint(const int64_t number)
 {
     if (number == 0)
     {
-        sign = sign::zero;
+        numberSign = sign::zero;
         digits.push_back(0);
     }
     else
     {
         if (number < 0)
-            sign = sign::negative;
+            numberSign = sign::negative;
         else
-            sign = sign::positive;
+            numberSign = sign::positive;
         uint64_t temp = static_cast<uint64_t>(abs(number));
         size_t numberOfDigits = static_cast<size_t>(log10(temp) + 1);
         size_t cursor = 0;
@@ -72,7 +72,7 @@ bigint::bigint(const string inputString)
     {
         if (inputString.length() == 1)
         {
-            sign = sign::zero;
+            numberSign = sign::zero;
             digits.push_back(0);
         }
         else
@@ -80,12 +80,12 @@ bigint::bigint(const string inputString)
     }
     else if (inputString[0] == '-')
     {
-        sign = sign::negative;
+        numberSign = sign::negative;
         fillDigits(inputString.substr(1, inputString.length() - 1));
     }
     else if (inputString[0] == '+')
     {
-        sign = sign::positive;
+        numberSign = sign::positive;
         fillDigits(inputString.substr(1, inputString.length() - 1));
     }
     else
@@ -117,12 +117,12 @@ void bigint::fillDigits(const string inputString)
 
 ostream &operator<<(ostream &out, const bigint &number)
 {
-    if (number.sign == sign::zero)
+    if (number.numberSign == sign::zero)
     {
         out << '0';
         return out;
     }
-    else if (number.sign == sign::negative)
+    else if (number.numberSign == sign::negative)
         out << '-';
     for (size_t i = number.digits.size(); i > 0; i--)
     {
@@ -136,7 +136,7 @@ ostream &operator<<(ostream &out, const bigint &number)
 
 bool bigint::operator==(const bigint &rhs) const
 {
-    if ((digits.size() != rhs.digits.size()) or (sign != rhs.sign))
+    if ((digits.size() != rhs.digits.size()) or (numberSign != rhs.numberSign))
         return false;
     for (size_t i = 0; i < digits.size(); ++i)
         if (digits[i] != rhs.digits[i])
