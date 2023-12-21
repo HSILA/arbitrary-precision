@@ -22,6 +22,7 @@ public:
     bigint(const string);
 
     bigint &operator+=(const bigint &);
+    bool operator==(const bigint &) const;
     friend ostream &operator<<(ostream &, const bigint &);
     inline static invalid_argument invalid_string = invalid_argument("The input string does not represent an integer number!");
 
@@ -130,4 +131,19 @@ ostream &operator<<(ostream &out, const bigint &number)
     out << '\n';
 
     return out;
+}
+
+
+bool bigint::operator==(const bigint &rhs) const
+{
+    if ((digits.size() != rhs.digits.size()) or (sign != rhs.sign))
+        return false;
+    for (size_t i = 0; i < digits.size(); ++i)
+        if (digits[i] != rhs.digits[i])
+            return false;
+    return true;
+}
+
+bool operator!=(const bigint &lhs, const bigint &rhs){
+    return !(lhs == rhs);
 }
