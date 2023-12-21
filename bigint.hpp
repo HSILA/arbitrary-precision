@@ -67,11 +67,11 @@ bigint::bigint(const int64_t number)
     }
 }
 
-bigint::bigint(const string inputString)
+bigint::bigint(const string input_string)
 {
-    if (inputString[0] == '0')
+    if (input_string[0] == '0')
     {
-        if (inputString.length() == 1)
+        if (input_string.length() == 1)
         {
             number_sign = sign::zero;
             digits.push_back(0);
@@ -79,43 +79,43 @@ bigint::bigint(const string inputString)
         else
             throw leading_zeros;
     }
-    else if (inputString[0] == '-')
+    else if (input_string[0] == '-')
     {
         number_sign = sign::negative;
-        fill_digits(inputString.substr(1, inputString.length() - 1));
+        fill_digits(input_string.substr(1, input_string.length() - 1));
     }
-    else if (inputString[0] == '+')
+    else if (input_string[0] == '+')
     {
         number_sign = sign::positive;
-        fill_digits(inputString.substr(1, inputString.length() - 1));
+        fill_digits(input_string.substr(1, input_string.length() - 1));
     }
     else
     {
         number_sign = sign::positive;
-        fill_digits(inputString);
+        fill_digits(input_string);
     }
 }
 
-bool bigint::is_digit(const string inputString)
+bool bigint::is_digit(const string input_string)
 {
-    for (const char &c : inputString)
+    for (const char &c : input_string)
         if (!isdigit(c))
             return false;
     return true;
 }
 
-void bigint::fill_digits(const string inputString)
+void bigint::fill_digits(const string input_string)
 {
-    if (inputString[0] == '0')
+    if (input_string[0] == '0')
         throw leading_zeros;
-    else if (!is_digit(inputString))
+    else if (!is_digit(input_string))
         throw non_digit;
 
-    digits.resize(inputString.length());
+    digits.resize(input_string.length());
 
-    for (size_t i = 0; i < inputString.length(); i++)
+    for (size_t i = 0; i < input_string.length(); i++)
     {
-        digits[i] = static_cast<uint8_t>(inputString[inputString.length() - i - 1] - '0');
+        digits[i] = static_cast<uint8_t>(input_string[input_string.length() - i - 1] - '0');
     }
 }
 
