@@ -20,7 +20,7 @@ public:
     bigint();
     bigint(const int64_t);
     bigint(const string);
-
+    bigint &operator=(const bigint &);
     bigint &operator+=(const bigint &);
     bool operator==(const bigint &) const;
     bool operator<(const bigint &) const;
@@ -224,4 +224,14 @@ bool operator>=(const bigint &lhs, const bigint &rhs)
 bool operator<=(const bigint &lhs, const bigint &rhs)
 {
     return !(lhs > rhs);
+}
+
+bigint &bigint::operator=(const bigint &rhs)
+{
+    if (this != &rhs)
+    {
+        digits = rhs.digits;
+        number_sign = rhs.number_sign;
+    }
+    return *this;
 }
