@@ -185,6 +185,8 @@ bool bigint::operator<(const bigint &rhs) const
                 {
                     if (digits[i - 1] > rhs.digits[i - 1])
                         return true;
+                    else if (digits[i - 1] < rhs.digits[i - 1])
+                        return false;
                 }
                 return false;
             }
@@ -211,6 +213,8 @@ bool bigint::operator<(const bigint &rhs) const
                 {
                     if (digits[i - 1] < rhs.digits[i - 1])
                         return true;
+                    else if (digits[i - 1] > rhs.digits[i - 1])
+                        return false;
                 }
                 return false;
             }
