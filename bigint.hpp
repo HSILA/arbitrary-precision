@@ -20,6 +20,7 @@ public:
     bigint();
     bigint(const int64_t);
     bigint(const string);
+    bigint(const bigint &) = default;
     bigint &operator=(const bigint &);
     bigint &operator+=(const bigint &);
     bool operator==(const bigint &) const;
