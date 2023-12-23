@@ -22,6 +22,7 @@ public:
     bigint(const string);
     bigint(const bigint &) = default;
     bigint &operator=(const bigint &);
+    bigint operator-() const;
     bigint &operator+=(const bigint &);
     bool operator==(const bigint &) const;
     bool operator<(const bigint &) const;
@@ -119,6 +120,16 @@ void bigint::fill_digits(const string input_string)
     {
         digits[i] = static_cast<uint8_t>(input_string[input_string.length() - i - 1] - '0');
     }
+}
+
+bigint bigint::operator-() const
+{
+    bigint out = *this;
+    if (out.number_sign == sign::negative)
+        out.number_sign = sign::positive;
+    else if (out.number_sign == sign::positive)
+        out.number_sign = sign::negative;
+    return out;
 }
 
 ostream &operator<<(ostream &out, const bigint &number)
