@@ -235,3 +235,50 @@ bigint &bigint::operator=(const bigint &rhs)
     }
     return *this;
 }
+
+bigint &bigint::operator+=(const bigint &other)
+{
+    if (other.number_sign == sign::zero)
+        return *this;
+    else if (number_sign == sign::zero)
+        *this = other;
+    else if (number_sign == other.number_sign)
+    {
+        size_t max_length = max(digits.size(), other.digits.size());
+        uint8_t carry = 0;
+        for (size_t i = 0; i < max_length; i++)
+        {
+            if (i >= digits.size())
+            {
+                uint8_t temp = other.digits[i] + carry;
+                carry = temp / 10;
+                digits.push_back(temp % 10);
+            }
+            else if (i >= other.digits.size())
+            {
+                uint8_t temp = digits[i] + carry;
+                carry = temp / 10;
+                digits[i] = temp % 10;
+            }
+            else
+            {
+                uint8_t temp = static_cast<uint8_t>(digits[i] + other.digits[i] + carry);
+                carry = temp / 10;
+                digits[i] = temp % 10;
+            }
+        }
+        if (carry > 0)
+            digits.push_back(carry);
+    }
+    else
+    {
+        ;
+    }
+    return *this;
+}
+
+bigint operator+(bigint lhs, const bigint &rhs)
+{
+    lhs += rhs;
+    return lhs;
+}
