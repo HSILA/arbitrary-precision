@@ -417,9 +417,10 @@ bigint &bigint::operator-=(const bigint &other)
         }
     }
     return *this;
+}
 
-    bigint operator-(bigint lhs, const bigint &rhs)
-    {
-        lhs -= rhs;
-        return lhs;
-    }
+bigint operator-(bigint lhs, const bigint &rhs)
+{
+    lhs -= rhs;
+    return lhs;
+}
