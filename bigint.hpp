@@ -24,6 +24,7 @@ public:
     bigint &operator=(const bigint &);
     bigint operator-() const;
     bigint &operator+=(const bigint &);
+    bigint &operator-=(const bigint &);
     bool operator==(const bigint &) const;
     bool operator<(const bigint &) const;
     friend ostream &operator<<(ostream &, const bigint &);
@@ -35,6 +36,9 @@ private:
     vector<uint8_t> digits;
     void fill_digits(const string);
     bool is_digit(const string);
+    bool is_abs_greater(const bigint &) const;
+    bool is_abs_equals(const bigint &) const;
+    void zero_remover();
 };
 
 bigint::bigint()
@@ -297,4 +301,120 @@ bigint operator+(bigint lhs, const bigint &rhs)
 {
     lhs += rhs;
     return lhs;
+}
+
+bool bigint::is_abs_greater(const bigint &rhs) const
+{
+    if (digits.size() != rhs.digits.size())
+        return digits.size() > rhs.digits.size();
+    else
+    {
+        for (size_t i = digits.size(); i > 0; i--)
+        {
+            if (digits[i - 1] > rhs.digits[i - 1])
+                return true;
+            else if (digits[i - 1] < rhs.digits[i - 1])
+                return false;
+        }
+        return false;
+    }
+}
+
+bool bigint::is_abs_equals(const bigint &rhs) const
+{
+    if (digits.size() != rhs.digits.size())
+        return false;
+    else
+    {
+        for (size_t i = 0; i < digits.size(); ++i)
+            if (digits[i] != rhs.digits[i])
+                return false;
+        return true;
+    }
+}
+
+void bigint::zero_remover()
+{
+    if (number_sign == sign::zero)
+        return;
+    while (digits[digits.size() - 1] == 0)
+        digits.pop_back();
+}
+
+bigint &bigint::operator-=(const bigint &other)
+{
+    if (other.number_sign == sign::zero)
+        return *this;
+    else if (number_sign == sign::zero)
+        *this = -other;
+    else if (this->is_abs_equals(other))
+        *this = bigint();
+    else if (number_sign == other.number_sign)
+    {
+        if (this->is_abs_greater(other))
+        {
+            uint8_t borrow = 0;
+            for (size_t i = 0; i < digits.size(); i++)
+            {
+                int16_t temp = digits[i];
+                if (borrow > 0)
+                {
+                    temp -= 1;
+                    if (temp < 0)
+                    {
+                        temp += 10;
+                        borrow = 1;
+                    }
+                    else
+                        borrow = 0;
+                }
+                if (i < other.digits.size())
+                    temp -= other.digits[i];
+                if (temp < 0)
+                {
+                    temp += 10;
+                    borrow = 1;
+                }
+                digits[i] = static_cast<uint8_t>(temp);
+            }
+            this->zero_remover();
+            return *this;
+        }
+        else if (!this->is_abs_greater(other))
+        {
+            bigint _other = other;
+            uint8_t borrow = 0;
+            for (size_t i = 0; i < _other.digits.size(); i++)
+            {
+                int16_t temp = _other.digits[i];
+                if (borrow > 0)
+                {
+                    temp -= 1;
+                    if (temp < 0)
+                    {
+                        temp += 10;
+                        borrow = 1;
+                    }
+                    else
+                        borrow = 0;
+                }
+                if (i < digits.size())
+                    temp -= digits[i];
+                if (temp < 0)
+                {
+                    temp += 10;
+                    borrow = 1;
+                }
+                _other.digits[i] = static_cast<uint8_t>(temp);
+            }
+            _other.zero_remover();
+            if (number_sign == sign::positive)
+                number_sign = sign::negative;
+            else
+                number_sign = sign::positive;
+            digits = _other.digits;
+            return *this;
+        }
+    }
+    return *this;
 }
