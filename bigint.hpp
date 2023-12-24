@@ -21,6 +21,8 @@ public:
     bigint(const int64_t);
     bigint(const string);
     bigint(const bigint &) = default;
+    void set(const int64_t &);
+    void set(const string &);
     bigint &operator=(const bigint &);
     bigint operator-() const;
     bigint &operator+=(const bigint &);
@@ -42,13 +44,7 @@ private:
     void zero_remover();
 };
 
-bigint::bigint()
-{
-    number_sign = sign::zero;
-    digits.push_back(0);
-}
-
-bigint::bigint(const int64_t number)
+void bigint::set(const int64_t &number)
 {
     if (number == 0)
     {
@@ -75,7 +71,7 @@ bigint::bigint(const int64_t number)
     }
 }
 
-bigint::bigint(const string input_string)
+void bigint::set(const string &input_string)
 {
     if (input_string[0] == '0')
     {
@@ -102,6 +98,22 @@ bigint::bigint(const string input_string)
         number_sign = sign::positive;
         fill_digits(input_string);
     }
+}
+
+bigint::bigint()
+{
+    number_sign = sign::zero;
+    digits.push_back(0);
+}
+
+bigint::bigint(const int64_t number)
+{
+    set(number);
+}
+
+bigint::bigint(const string input_string)
+{
+    set(input_string);
 }
 
 bool bigint::is_digit(const string input_string)
