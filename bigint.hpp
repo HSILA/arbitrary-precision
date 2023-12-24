@@ -290,9 +290,15 @@ bigint &bigint::operator+=(const bigint &other)
         if (carry > 0)
             digits.push_back(carry);
     }
-    else
+    else if (number_sign == sign::positive and other.number_sign == sign::negative)
     {
-        ;
+        *this -= -other;
+    }
+    else if (number_sign == sign::negative and other.number_sign == sign::positive)
+    {
+        bigint temp = other;
+        temp -= -*this;
+        *this = temp;
     }
     return *this;
 }
@@ -415,6 +421,16 @@ bigint &bigint::operator-=(const bigint &other)
             digits = _other.digits;
             return *this;
         }
+    }
+    else if (number_sign == sign::positive and other.number_sign == sign::negative)
+    {
+        *this += -other;
+    }
+    else if (number_sign == sign::negative and other.number_sign == sign::positive)
+    {
+        bigint temp = other;
+        temp += -*this;
+        *this = -temp;
     }
     return *this;
 }
