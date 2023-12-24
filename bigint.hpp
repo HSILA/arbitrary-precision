@@ -25,6 +25,7 @@ public:
     bigint operator-() const;
     bigint &operator+=(const bigint &);
     bigint &operator-=(const bigint &);
+    bigint &operator*=(const bigint &);
     bool operator==(const bigint &) const;
     bool operator<(const bigint &) const;
     friend ostream &operator<<(ostream &, const bigint &);
@@ -438,5 +439,78 @@ bigint &bigint::operator-=(const bigint &other)
 bigint operator-(bigint lhs, const bigint &rhs)
 {
     lhs -= rhs;
+    return lhs;
+}
+
+bigint &bigint::operator*=(const bigint &other)
+{
+    if (number_sign == sign::zero or other.number_sign == sign::zero)
+    {
+        number_sign = sign::zero;
+        digits = {0};
+        return *this;
+    }
+    if (number_sign == other.number_sign)
+        number_sign = sign::positive;
+    else
+        number_sign = sign::negative;
+
+    if (digits.size() == 1 and digits[0] == 1)
+    {
+        digits = other.digits;
+        return *this;
+    }
+    else if (other.digits.size() == 1 and other.digits[0] == 1)
+        return *this;
+
+    if (digits.size() >= other.digits.size())
+    {
+        bigint result;
+        for (size_t i = 0; i < other.digits.size(); i++)
+        {
+            uint8_t carry = 0;
+            bigint temp;
+            temp.digits.resize(i, 0);
+            for (size_t j = 0; j < digits.size(); j++)
+            {
+                uint8_t multiply = digits[j] * other.digits[i] + carry;
+                carry = multiply / 10;
+                temp.digits.push_back(multiply % 10);
+            }
+            if (carry > 0)
+                temp.digits.push_back(carry);
+            temp.number_sign = sign::positive;
+            result += temp;
+        }
+        digits = result.digits;
+        return *this;
+    }
+    else
+    {
+        bigint result;
+        for (size_t i = 0; i < digits.size(); i++)
+        {
+            uint8_t carry = 0;
+            bigint temp;
+            temp.digits.resize(i, 0);
+            for (size_t j = 0; j < other.digits.size(); j++)
+            {
+                uint8_t multiply = digits[i] * other.digits[j] + carry;
+                carry = multiply / 10;
+                temp.digits.push_back(multiply % 10);
+            }
+            if (carry > 0)
+                temp.digits.push_back(carry);
+            temp.number_sign = sign::positive;
+            result += temp;
+        }
+        digits = result.digits;
+        return *this;
+    }
+}
+
+bigint operator*(bigint lhs, const bigint &rhs)
+{
+    lhs *= rhs;
     return lhs;
 }
