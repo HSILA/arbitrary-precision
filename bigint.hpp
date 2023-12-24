@@ -33,6 +33,7 @@ public:
     friend ostream &operator<<(ostream &, const bigint &);
     inline static invalid_argument non_digit = invalid_argument("The input string contains non digit characters!");
     inline static invalid_argument leading_zeros = invalid_argument("The input number cannot have leading zeros!");
+    inline static invalid_argument empty_string = invalid_argument("The input string is empty!");
 
 private:
     sign number_sign;
@@ -73,6 +74,8 @@ void bigint::set(const int64_t &number)
 
 void bigint::set(const string &input_string)
 {
+    if (input_string.empty())
+        throw empty_string;
     if (input_string[0] == '0')
     {
         if (input_string.length() == 1)
