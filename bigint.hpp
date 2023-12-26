@@ -549,7 +549,7 @@ bigint &bigint::operator-=(const bigint &other)
         return *this;
     else if (number_sign == sign::zero)
         *this = -other;
-    else if (this->is_abs_equals(other))
+    else if (*this == other)
         *this = bigint();
     else if (number_sign == other.number_sign)
     {
