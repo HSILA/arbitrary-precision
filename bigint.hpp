@@ -262,18 +262,18 @@ ostream &operator<<(ostream &out, const bigint &number)
 }
 
 /**
- * @brief Checks whether current bigint (left-hand side) is equal to right-hand side.
+ * @brief Checks whether current bigint (left-hand side) is equal to another (right-hand side).
  *
- * @param rhs The right-hand side bigint operand of the comparison.
+ * @param other The right-hand side bigint operand of the comparison.
  * @return true If  bigint operands are equal.
  * @return false If two bigint operands are not equal.
  */
-bool bigint::operator==(const bigint &rhs) const
+bool bigint::operator==(const bigint &other) const
 {
-    if ((digits.size() != rhs.digits.size()) or (number_sign != rhs.number_sign))
+    if ((digits.size() != other.digits.size()) or (number_sign != other.number_sign))
         return false;
     for (size_t i = 0; i < digits.size(); ++i)
-        if (digits[i] != rhs.digits[i])
+        if (digits[i] != other.digits[i])
             return false;
     return true;
 }
@@ -292,33 +292,33 @@ bool operator!=(const bigint &lhs, const bigint &rhs)
 }
 
 /**
- * @brief Checks whether current bigint (left-hand side) is less than the right-hand side.
+ * @brief Checks whether current bigint (left-hand side) is less than the other (right-hand side).
  *
- * @param rhs The right-hand side bigint operand of the comparison.
+ * @param other The right-hand side bigint operand of the comparison.
  * @return true If left-hand side is less than `rhs`;
  * @return false If current number is greater than or equal to `rhs`.
  */
-bool bigint::operator<(const bigint &rhs) const
+bool bigint::operator<(const bigint &other) const
 {
-    if (*this == rhs)
+    if (*this == other)
         return false;
 
     switch (number_sign)
     {
     case sign::negative:
-        if (rhs.number_sign == sign::negative)
+        if (other.number_sign == sign::negative)
         {
-            if (digits.size() > rhs.digits.size())
+            if (digits.size() > other.digits.size())
                 return true;
-            else if (digits.size() < rhs.digits.size())
+            else if (digits.size() < other.digits.size())
                 return false;
             else
             {
                 for (size_t i = digits.size(); i > 0; i--)
                 {
-                    if (digits[i - 1] > rhs.digits[i - 1])
+                    if (digits[i - 1] > other.digits[i - 1])
                         return true;
-                    else if (digits[i - 1] < rhs.digits[i - 1])
+                    else if (digits[i - 1] < other.digits[i - 1])
                         return false;
                 }
                 return false;
@@ -328,25 +328,25 @@ bool bigint::operator<(const bigint &rhs) const
             return true;
         break;
     case sign::zero:
-        if (rhs.number_sign == sign::positive)
+        if (other.number_sign == sign::positive)
             return true;
         else
             return false;
         break;
     case sign::positive:
-        if (rhs.number_sign == sign::positive)
+        if (other.number_sign == sign::positive)
         {
-            if (digits.size() > rhs.digits.size())
+            if (digits.size() > other.digits.size())
                 return false;
-            else if (digits.size() < rhs.digits.size())
+            else if (digits.size() < other.digits.size())
                 return true;
             else
             {
                 for (size_t i = digits.size(); i > 0; i--)
                 {
-                    if (digits[i - 1] < rhs.digits[i - 1])
+                    if (digits[i - 1] < other.digits[i - 1])
                         return true;
-                    else if (digits[i - 1] > rhs.digits[i - 1])
+                    else if (digits[i - 1] > other.digits[i - 1])
                         return false;
                 }
                 return false;
@@ -402,15 +402,15 @@ bool operator<=(const bigint &lhs, const bigint &rhs)
 /**
  * @brief Assigns the value of another bigint number to the current number.
  *
- * @param rhs The value to be assigned to the current number.
+ * @param other The value to be assigned to the current number.
  * @return bigint& A reference to the modified bigint number.
  */
-bigint &bigint::operator=(const bigint &rhs)
+bigint &bigint::operator=(const bigint &other)
 {
-    if (this != &rhs)
+    if (this != &other)
     {
-        digits = rhs.digits;
-        number_sign = rhs.number_sign;
+        digits = other.digits;
+        number_sign = other.number_sign;
     }
     return *this;
 }
@@ -484,21 +484,21 @@ bigint operator+(bigint lhs, const bigint &rhs)
 /**
  * @brief Compares the absolute value of current bigint number with another.
  *
- * @param rhs The other bigint number, the right-hand side of the comparison.
+ * @param other The other bigint number, the right-hand side of the comparison.
  * @return true If the absolute value of the current number is greater than the other.
  * @return false If the If the absolute value of the current number is less than the other.
  */
-bool bigint::is_abs_greater(const bigint &rhs) const
+bool bigint::is_abs_greater(const bigint &other) const
 {
-    if (digits.size() != rhs.digits.size())
-        return digits.size() > rhs.digits.size();
+    if (digits.size() != other.digits.size())
+        return digits.size() > other.digits.size();
     else
     {
         for (size_t i = digits.size(); i > 0; i--)
         {
-            if (digits[i - 1] > rhs.digits[i - 1])
+            if (digits[i - 1] > other.digits[i - 1])
                 return true;
-            else if (digits[i - 1] < rhs.digits[i - 1])
+            else if (digits[i - 1] < other.digits[i - 1])
                 return false;
         }
         return false;
@@ -508,18 +508,18 @@ bool bigint::is_abs_greater(const bigint &rhs) const
 /**
  * @brief Checks whether current bigint number has the same absolute value as the other.
  *
- * @param rhs The other bigint number, the right-hand side of the comparison.
+ * @param other The other bigint number, the right-hand side of the comparison.
  * @return true If the absolute value of current and `rhs` numbers are equal.
  * @return false If the absolute values of the current and the `rhs` numbers are not equal.
  */
-bool bigint::is_abs_equals(const bigint &rhs) const
+bool bigint::is_abs_equals(const bigint &other) const
 {
-    if (digits.size() != rhs.digits.size())
+    if (digits.size() != other.digits.size())
         return false;
     else
     {
         for (size_t i = 0; i < digits.size(); ++i)
-            if (digits[i] != rhs.digits[i])
+            if (digits[i] != other.digits[i])
                 return false;
         return true;
     }
