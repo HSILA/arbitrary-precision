@@ -30,8 +30,8 @@ class bigint
 {
 public:
     bigint();
-    bigint(const int64_t);
-    bigint(const string);
+    bigint(const int64_t &);
+    bigint(const string &);
     /**
      * @brief Construct a new bigint object with another (Default copy constructor)
      *
@@ -71,7 +71,7 @@ private:
     sign number_sign;
     /**
      * @brief The vector containing the bigint's digits, each element of the vector is an integer in [0,9].
-     * 
+     *
      */
     vector<uint8_t> digits;
     void fill_digits(const string);
@@ -167,7 +167,7 @@ bigint::bigint()
  *
  * @param number A signed 64 input number to initialize the object with.
  */
-bigint::bigint(const int64_t number)
+bigint::bigint(const int64_t &number)
 {
     set(number);
 }
@@ -177,7 +177,7 @@ bigint::bigint(const int64_t number)
  *
  * @param input_string An input string representing a bigint number to initialize the object with.
  */
-bigint::bigint(const string input_string)
+bigint::bigint(const string &input_string)
 {
     set(input_string);
 }
