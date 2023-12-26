@@ -75,7 +75,7 @@ private:
      */
     vector<uint8_t> digits;
     void fill_digits(const string);
-    bool is_digit(const string);
+    bool is_digit(const string) const;
     bool is_abs_greater(const bigint &) const;
     bool is_abs_equals(const bigint &) const;
     void zero_remover();
@@ -189,7 +189,7 @@ bigint::bigint(const string input_string)
  * @return true If all the characters in the string are digits.
  * @return false If the string has any non-digit characters.
  */
-bool bigint::is_digit(const string input_string)
+bool bigint::is_digit(const string input_string) const
 {
     for (const char &c : input_string)
         if (!isdigit(c))
