@@ -506,26 +506,6 @@ bool bigint::is_abs_greater(const bigint &other) const
 }
 
 /**
- * @brief Checks whether current bigint number has the same absolute value as the other.
- *
- * @param other The other bigint number, the right-hand side of the comparison.
- * @return true If the absolute value of current and `rhs` numbers are equal.
- * @return false If the absolute values of the current and the `rhs` numbers are not equal.
- */
-bool bigint::is_abs_equals(const bigint &other) const
-{
-    if (digits.size() != other.digits.size())
-        return false;
-    else
-    {
-        for (size_t i = 0; i < digits.size(); ++i)
-            if (digits[i] != other.digits[i])
-                return false;
-        return true;
-    }
-}
-
-/**
  * @brief Removes leading zeros of a bigint object.‍ It will iterate the digits starting from the most significant digit, and remove any leading zeros in the start, if available.
  *
  */
