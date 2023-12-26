@@ -137,18 +137,18 @@ void bigint::set(const string &input_string)
     }
     else if (input_string[0] == '-')
     {
-        number_sign = sign::negative;
         fill_digits(input_string.substr(1, input_string.length() - 1));
+        number_sign = sign::negative;
     }
     else if (input_string[0] == '+')
     {
-        number_sign = sign::positive;
         fill_digits(input_string.substr(1, input_string.length() - 1));
+        number_sign = sign::positive;
     }
     else
     {
-        number_sign = sign::positive;
         fill_digits(input_string);
+        number_sign = sign::positive;
     }
 }
 
