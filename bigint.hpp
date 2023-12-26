@@ -77,7 +77,6 @@ private:
     void fill_digits(const string);
     bool is_digit(const string) const;
     bool is_abs_greater(const bigint &) const;
-    bool is_abs_equals(const bigint &) const;
     void zero_remover();
 };
 
