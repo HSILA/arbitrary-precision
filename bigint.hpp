@@ -98,14 +98,19 @@ void bigint::set(const int64_t &number)
             number_sign = sign::negative;
         else
             number_sign = sign::positive;
+        // if the input number is INT64_MIN, casting it to int64_t will cause overflow, so I casted it to uint64_t 
+        // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
         uint64_t temp = static_cast<uint64_t>(abs(number));
         size_t number_of_digits = static_cast<size_t>(log10(temp) + 1);
+        // End
         size_t cursor = 0;
         digits.resize(number_of_digits);
 
         while (temp != 0)
         {
+            // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
             digits[cursor] = static_cast<uint8_t>(temp % 10);
+            // End
             temp = temp / 10;
             cursor++;
         }
@@ -194,6 +199,7 @@ bigint::bigint(const string &input_string)
  * @return true If all the characters in the string are digits.
  * @return false If the string has any non-digit characters.
  */
+// Start: check a string with character classification functions, source https://baraksh.com/CSE701/notes.php#io-error-handling
 bool bigint::is_digit(const string input_string) const
 {
     for (const char &c : input_string)
@@ -201,6 +207,7 @@ bool bigint::is_digit(const string input_string) const
             return false;
     return true;
 }
+// End
 
 /**
  * @brief Parses a string representing a bigint number and fills it in the `bigint::digits` vector.
@@ -222,7 +229,10 @@ void bigint::fill_digits(const string input_string)
 
     for (size_t i = 0; i < input_string.length(); i++)
     {
+        // Start: Convert char to int, source: https://sentry.io/answers/char-to-int-in-c-and-cpp/
+        //        Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
         digits[i] = static_cast<uint8_t>(input_string[input_string.length() - i - 1] - '0');
+        // End
     }
 }
 
@@ -452,7 +462,9 @@ bigint &bigint::operator+=(const bigint &other)
             }
             else
             {
+                // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
                 uint8_t temp = static_cast<uint8_t>(digits[i] + other.digits[i] + carry);
+                // End
                 carry = temp / 10;
                 digits[i] = temp % 10;
             }
@@ -562,7 +574,9 @@ bigint &bigint::operator-=(const bigint &other)
                     temp += 10;
                     borrow = 1;
                 }
+                // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
                 digits[i] = static_cast<uint8_t>(temp);
+                // End
             }
             this->zero_remover();
             return *this;
@@ -592,7 +606,9 @@ bigint &bigint::operator-=(const bigint &other)
                     temp += 10;
                     borrow = 1;
                 }
+                // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
                 _other.digits[i] = static_cast<uint8_t>(temp);
+                // End
             }
             _other.zero_remover();
             if (number_sign == sign::positive)
@@ -666,7 +682,9 @@ bigint &bigint::operator*=(const bigint &other)
             temp.digits.resize(i, 0);
             for (size_t j = 0; j < digits.size(); j++)
             {
-                uint8_t multiply = digits[j] * other.digits[i] + carry;
+                // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
+                uint8_t multiply = static_cast<uint8_t>(digits[j] * other.digits[i] + carry);
+                // End
                 carry = multiply / 10;
                 temp.digits.push_back(multiply % 10);
             }
@@ -688,7 +706,9 @@ bigint &bigint::operator*=(const bigint &other)
             temp.digits.resize(i, 0);
             for (size_t j = 0; j < other.digits.size(); j++)
             {
-                uint8_t multiply = digits[i] * other.digits[j] + carry;
+                // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
+                uint8_t multiply = static_cast<uint8_t>(digits[i] * other.digits[j] + carry);
+                // End
                 carry = multiply / 10;
                 temp.digits.push_back(multiply % 10);
             }
