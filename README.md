@@ -61,7 +61,7 @@ int main()
 Both constructors and setter functions maintain the class invariant and will throw an exception upon receiving invalid input. Specifically, the exceptions thrown when instantiating the string setter and constructor with invalid input are:
 - `non_digit`: This exception will be thrown if the string constructor or setter function is instantiated with a string containing non-digit characters. It does not apply to `+` and `-` characters in the beginning of the number. Examples of invalid inputs are: `"331313.1"`, `"AB31311"`, and `"gk%45#^$#!"`.
 - `leading_zeros`: This exception will be thrown if the string constructor or setter function is instantiated with a number with leading zeros. It includes but is not limited to: `"000000"`, and `"0031313"`. This is a design decision that I made because in C++, if an integer starts with zero, it means that it represents the int in the octal base, but the string parser of this class can only parse decimal integers, so if the user starts the string with zero, it might imply an octal representation, which can confuse other users.
-- `empty_string`: This exception will be thrown if the string constructor or setter function is instantiated with an empty string `"`. 
+- `empty_string`: This exception will be thrown if the string constructor or setter function is instantiated with an empty string `""`. 
 
 ### Output Stream
 Just like any primitive type of C++, you can use insertion operator `<<` in order to insert a bigint number into any output stream, being terminal or a file:
