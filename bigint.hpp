@@ -91,6 +91,7 @@ void bigint::set(const int64_t &number)
 {
     if (number == 0)
     {
+        digits.clear();
         number_sign = sign::zero;
         digits.push_back(0);
     }
@@ -133,6 +134,7 @@ void bigint::set(const string &input_string)
         throw empty_string;
     if (input_string == "+0" or input_string == "-0")
     {
+        digits.clear();
         number_sign = sign::zero;
         digits.push_back(0);
     }
@@ -141,6 +143,7 @@ void bigint::set(const string &input_string)
     {
         if (input_string.length() == 1)
         {
+            digits.clear();
             number_sign = sign::zero;
             digits.push_back(0);
         }
