@@ -36,7 +36,9 @@ public:
      * @brief Construct a new bigint object with another (Default copy constructor)
      *
      */
+    // Start: define an explicit copy constructor to prevent a warning. Source: https://stackoverflow.com/questions/51863588/warning-definition-of-implicit-copy-constructor-is-deprecated
     bigint(const bigint &) = default;
+    //
     void set(const int64_t &);
     void set(const string &);
     bigint &operator=(const bigint &);
@@ -269,7 +271,9 @@ ostream &operator<<(ostream &out, const bigint &number)
         out << '-';
     for (size_t i = number.digits.size(); i > 0; i--)
     {
+        // Start: Unsigned 8-bit int is treated as unsigned char, to print it out, it should be casted: https://stackoverflow.com/questions/19562103/uint8-t-cant-be-printed-with-cout
         out << unsigned(number.digits[i - 1]);
+        //
     }
     out << '\n';
 
@@ -422,7 +426,9 @@ bool operator<=(const bigint &lhs, const bigint &rhs)
  */
 bigint &bigint::operator=(const bigint &other)
 {
+    // Start: Check self-assignment. Source: https://en.cppreference.com/w/cpp/language/copy_assignment
     if (this != &other)
+    // End
     {
         digits = other.digits;
         number_sign = other.number_sign;
