@@ -124,6 +124,12 @@ void bigint::set(const string &input_string)
 {
     if (input_string.empty())
         throw empty_string;
+    if (input_string == "+0" or input_string == "-0")
+    {
+        number_sign = sign::zero;
+        digits.push_back(0);
+    }
+
     if (input_string[0] == '0')
     {
         if (input_string.length() == 1)
