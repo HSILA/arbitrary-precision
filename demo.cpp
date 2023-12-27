@@ -1,4 +1,5 @@
 #include "bigint.hpp"
+#include <fstream>;
 using namespace std;
 
 int main()
@@ -66,6 +67,23 @@ int main()
     {
         cout << "Error: " << error.what() << '\n';
     }
+    // Writing to a file
+    try
+    {
+        bigint z("173917386716391371739");
+        ofstream output_file("output.txt");
+        if (output_file.is_open())
+        {
+            output_file << c;
+            output_file.close();
+        }
+        cout << z;
+    }
+    catch (const invalid_argument &error)
+    {
+        cout << "Error: " << error.what() << '\n';
+    }
+
     // We can negate a bigint number with unary negate operator:
     bigint h = -a;
     cout << "h = " << -a; // 9888898888
