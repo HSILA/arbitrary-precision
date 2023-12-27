@@ -1,5 +1,5 @@
 #include "bigint.hpp"
-#include <fstream>;
+#include <fstream>
 using namespace std;
 
 int main()
@@ -74,12 +74,11 @@ int main()
         ofstream output_file("output.txt");
         if (output_file.is_open())
         {
-            output_file << c;
+            output_file << z;
             output_file.close();
         }
-        cout << z;
     }
-    catch (const invalid_argument &error)
+    catch (const exception &error)
     {
         cout << "Error: " << error.what() << '\n';
     }
