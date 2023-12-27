@@ -85,7 +85,7 @@ int main()
 ```
 
 ### Assignment & Negation
-You can assign a bigint number to another and negate an existing bigint number:
+You can assign (`=`) a bigint number to another and negate (`-`) an existing bigint number:
 ```cpp
 #include "bigint.hpp"
 using namespace std;
@@ -103,7 +103,7 @@ int main()
 ```
 
 ### Comparison
-You can compare two bigint numbers:
+You can compare two bigint numbers with operators such as `==`, `!=`, `<`, `>`, `<=` and `>=`:
 ```cpp
 #include "bigint.hpp"
 using namespace std;
@@ -156,10 +156,48 @@ Now, I will go through each constructor, function and overloaded operator one by
 ```cpp
 conversion from 'int' to '__gnu_cxx::__alloc_traits<std::allocator<unsigned char>, unsigned char>::value_type' {aka 'unsigned char'} may change value [-Wconversion]
 ```
-This happens because in some parts of my code (), the output of certain non-bigint arithmetic operations would be promoted to `int`. Since in the project description, it is mentioned that our code must compile without any warnings, and I am absolutely sure that in every case that I have cast an `int` to an `uint8_t`, that number was in the range of [0,9], I have used this workaround. [Source1](https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike), [Source2](https://stackoverflow.com/questions/19562103/uint8-t-cant-be-printed-with-cout)
+This happens because in some parts of the code, the output of certain non-bigint arithmetic operations would be promoted to `int`. Since in the project description, it is mentioned that our code must compile without any warnings, and I am absolutely sure that in every case that I have cast an `int` to an `uint8_t`, that number was in the range of [0,9], I have used this workaround ([Source](https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike)).
 
-### Setter Functions
+### Setter Functions & Constructors
 In order to be able to change a bigint object after defining it, I have defined two setter functions and then used them in constructors. Just like constructors, setter functions can accept two data types to create a bigint object:
 - `string`: In [this](https://github.com/HSILA/arbitrary-precision/blob/377fa2506b7e38f39ec80f339abea0aefc43e5bb/bigint.hpp#L123-L158) setter function, the input string is first checked for being empty, and if so, an `empty_string` exception will be thrown. Then, if the string is `"+0"` or `"-0"` or a simple `"0"`, the value of the bigint number will be set to 0. Although this class does not consider a positive or negative sign for zero, the user might mistakenly do it, so we have to handle it as C++ will do (it will see both `+0` and `-0` as a `0`). Also, here, the length of the string will be checked; if it has started with zero and has a length greater than 1 (a number with leading zeros), a `leading_zeros` exception will be thrown. In this setter function,  the helper function `fillDigits` is used. After parsing the first character of the string to see whether the number is positive or negative, the rest of the string will be passed to the private member function `fill_digits` in order to fill in the `digits`. It will also check for leading zeros and throw an exception in that case. Another important check here is to see whether a string contains non-digit characters, which is checked with another helper function called `is_digit`, which will iterate a string character by character and return false if it contains any non-digit characters. `fillDigits` will iterate the string backwards and fill in the `digits` to form the bigint number. Then, upon successful parsing of the string, the sign of the bigint number is assigned in the setter function. The string constructor will simply use this setter function, since it will preserve the class invariant, whether upon creating a new object or altering an existing one.
 
-- `int64_t`: [This] setter function first checks whether the input is zero; if so, it will create a bigint number with the value zero. Otherwise, it will first calculate the number of digits in the input by taking its logarithm in base 10. It will resize the `digits` vector accordingly and fill its elements with consecutive divisions.
+- `int64_t`: [This] setter function first checks whether the input is zero; if so, it will create a bigint number with the value zero. Otherwise, it will first calculate the number of digits in the input by taking its logarithm in base 10. It will resize the `digits` vector accordingly and fill its elements with consecutive divisions. The int constructor will use this setter function to instantiate and object with an integer.
+
+- Default Constructor: It will set the sign of the bigint number to `sign::zero` and push a single value of 0 into the `digits` vector.
+
+### Insertion Operator <<
+This operator is defined to insert a bigint number into an output stream like a file or terminal. It will first check the sign of the number, if it is zero it will insert `"0"` and if it is negative it will insert a `"-"` in the beginning of the stream. C++ treats an `uint8_t` as an unsigned char and inserts it as an ASCII character into the stream, I casted it into `unsigned` to be printable ([Source](https://stackoverflow.com/questions/19562103/uint8-t-cant-be-printed-with-cout)). This operator is overloaded as a non-member friend function, since it should access private members `sign` and `digits` in order to insert them.
+
+### Comparison Operators
+For the comparison operators, I have just implemented `==` and `<`, implementing others (`!=`, `>`, `<=`, `>=`) would be trivial using these two. I have defined them as member functions, since they need to access `sign` and `digits`, but I have set them to be `const` because they should not change anything about an object. Other comparison operators (`!=`, `>`, `<=`, `>=`) are defined as non-member functions.
+
+#### Equality Operator (==)
+In order to check whether two bigint numbers are equals or not, this operator first checks whether `digits` vectors in both have a same size, if not, they are not equals. Also, it will check the sign of the two numbers, if they have different signs, the cannot be equal. In both cases, it will return `false`. If two numbers have a same number of digits or same signs, it will iterate over their `digits` vector and compares them element-wise. It will return `false` if any of the corresponding digits are not equal and `true` otherwise.
+
+#### Less Than Operator (<)
+This operator, first checks whether two bigint numbers are equals and if so, it will return true. The it will check different scenarios:
+- If the current number (left-hand side of the operator) is negative:
+  - If the other number (right-hand side of the operator) is positive or zero it will return `true`.
+  - If the other number is negative as well, it will first compares the sizes of their `digits` vectors. If current object has more digits than the others, it will return `true`, otherwise it will return `false`. If both of them have the same number of digits, it will compare them digit by digit starting from the most significant digit, the first time where a digit in current number is greater than the corresponding digit in the other number, it will returns `true`, if it is less, it returns false.
+- If the current number is zero, if the other is negative it will return `true` otherwise `false`.
+- If the current number (left-hand side of the operator) is positive:
+  - If the other number (right-hand side of the operator) is negative or zero it will return `true`.
+  - If the other number is negative as well, it will first compares the sizes of their `digits` vectors. If current object has fewer digits than the others, it will return `true`, otherwise it will return `false`. If both of them have the same number of digits, it will compare them digit by digit starting from the most significant digit, the first time where a digit in current number is less than the corresponding digit in the other number, it will returns `true`, if it is greater, it returns `false`.
+
+### Assignment Operators
+In this section, I will explain assignment operators such as `=`, `+=`, `-=` and `*=`. They are used to define arithmetic operators such as `+`, `-` and `*`.
+
+#### Assignment Operator (=)
+
+#### Addition Assignment Operator (+=)
+
+#### Subtraction Assignment Operator (-=)
+
+#### Multiplication Assignment Operator (*=)
+
+### Arithmetic Operators
+
+#### Negation Operator
+The unary - operator (`operator-()`) will create a copy of the current bigint number. Then it will negate the number if it is non-zero and return the created copy. Since it should not change the sign of the current number, it is defined as a `const`, as described in the standard prototype [here](https://en.cppreference.com/w/cpp/language/operator_arithmetic).
+
