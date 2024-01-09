@@ -101,7 +101,7 @@ void bigint::set(const int64_t &number)
             number_sign = sign::negative;
         else
             number_sign = sign::positive;
-        // if the input number is INT64_MIN, casting it to int64_t will cause overflow, so I casted it to uint64_t 
+        // if the input number is INT64_MIN, casting it to int64_t will cause overflow, so I casted it to uint64_t
         // Start: Cast from int to uint8_t source: https://stackoverflow.com/questions/57746321/implicit-conversion-warning-int-to-int-lookalike
         uint64_t temp = static_cast<uint64_t>(abs(number));
         size_t number_of_digits = static_cast<size_t>(log10(temp) + 1);
@@ -267,7 +267,7 @@ ostream &operator<<(ostream &out, const bigint &number)
 {
     if (number.number_sign == sign::zero)
     {
-        out << '0' << '\n';
+        out << '0';
         return out;
     }
     else if (number.number_sign == sign::negative)
@@ -278,8 +278,6 @@ ostream &operator<<(ostream &out, const bigint &number)
         out << unsigned(number.digits[i - 1]);
         //
     }
-    out << '\n';
-
     return out;
 }
 
