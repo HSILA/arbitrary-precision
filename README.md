@@ -27,13 +27,13 @@ using namespace std;
 int main()
 {
     bigint a;
-    cout << a; \\ 0
+    cout << a << '\n'; \\ 0
 
     bigint b(9223372036854775807);
-    cout << b; \\ 9223372036854775807
+    cout << b << '\n'; \\ 9223372036854775807
 
     bigint c("-12345678909876543210")
-    cout << c; \\ -12345678909876543210
+    cout << c << '\n'; \\ -12345678909876543210
 }
 ```
 
@@ -47,13 +47,13 @@ using namespace std;
 int main()
 {
     bigint d(12);
-    cout << d; // 12
+    cout << d << '\n'; // 12
 
     d.set("-13131313");
-    cout << d; // -13131313
+    cout << d << '\n'; // -13131313
 
     d.set(13);
-    cout << d; // 13
+    cout << d << '\n'; // 13
 }
 ```
 
@@ -73,7 +73,7 @@ using namespace std;
 int main()
 {
     bigint c("516");
-    cout << c; // 516
+    cout << c << '\n'; // 516
 
     ofstream output_file("output.txt");
     if (output_file.is_open())
@@ -94,11 +94,11 @@ int main()
 {
     bigint j(123);
     bigint k("-456");
-    cout << "j = " << j; // 123
-    cout << "k = " << k; // -456
+    cout << "j = " << j << '\n'; // 123
+    cout << "k = " << k << '\n'; // -456
     j = k;
-    cout << "j = " << j; // -456
-    cout << "j = " << -j; // 456
+    cout << "j = " << j << '\n'; // -456
+    cout << "j = " << -j << '\n'; // 456
 }
 ```
 
@@ -133,16 +133,16 @@ int main()
     bigint b("987654321");
 
     a += b;
-    cout << "a = " << a;         // 1111111110
-    cout << "a + b = " << a + b; // 2098765431
+    cout << "a = " << a << '\n';         // 1111111110
+    cout << "a + b = " << a + b << '\n'; // 2098765431
 
     a -= b;
-    cout << "a = " << a;         // 123456789
-    cout << "a - b = " << a - b; // -864197532
+    cout << "a = " << a << '\n';         // 123456789
+    cout << "a - b = " << a - b << '\n'; // -864197532
 
     a *= b;
-    cout << "a = " << a;         // 121932631112635269
-    cout << "a*  b = " << a * b; // 120427289989293261124847349
+    cout << "a = " << a << '\n';         // 121932631112635269
+    cout << "a*  b = " << a * b << '\n'; // 120427289989293261124847349
 }
 ```
 
@@ -162,7 +162,7 @@ This happens because, in some parts of the code, the output of certain non-bigin
 To be able to change a bigint object after defining it, I have defined two setter functions and then used them in constructors. Just like constructors, setter functions can accept two data types to create a bigint object:
 - `string`: In [this](https://github.com/HSILA/arbitrary-precision/blob/377fa2506b7e38f39ec80f339abea0aefc43e5bb/bigint.hpp#L123-L158) setter function, the input string is first checked for being empty, and if so, an `empty_string` exception will be thrown. Then, if the string is `"+0"` or `"-0"` or a simple `"0"`, the value of the bigint number will be set to 0. Although this class does not consider a positive or negative sign for zero, the user might mistakenly do it, so we have to handle it as C++ will do (it will see both `+0` and `-0` as a `0`). Also, here, the length of the string will be checked; if it has started with zero and has a length greater than 1 (a number with leading zeros), a `leading_zeros` exception will be thrown. In this setter function,  the helper function `fillDigits` is used. After parsing the first character of the string to see whether the number is positive or negative, the rest of the string will be passed to the private member function `fill_digits` in order to fill in the `digits`. It will also check for leading zeros and throw an exception in that case. Another important check here is to see whether a string contains non-digit characters, which is checked with another helper function called `is_digit`, which will iterate a string character by character and return false if it contains any non-digit characters. `fillDigits` will iterate the string backwards and fill in the `digits` to form the bigint number. Then, upon successful parsing of the string, the sign of the bigint number is assigned in the setter function. The string constructor will simply use this setter function since it will preserve the class invariant, whether upon creating a new object or altering an existing one.
 
-- `int64_t`: [This] setter function first checks whether the input is zero; if so, it will create a bigint number with the value zero. Otherwise, it will first calculate the number of digits in the input by taking its logarithm in base 10. It will resize the `digits` vector accordingly and fill its elements with consecutive divisions. The int constructor will use this setter function to instantiate and object with an integer.
+- `int64_t`: [This](https://github.com/HSILA/arbitrary-precision/blob/377fa2506b7e38f39ec80f339abea0aefc43e5bb/bigint.hpp#L88-L113) setter function first checks whether the input is zero; if so, it will create a bigint number with the value zero. Otherwise, it will first calculate the number of digits in the input by taking its logarithm in base 10. It will resize the `digits` vector accordingly and fill its elements with consecutive divisions. The int constructor will use this setter function to instantiate and object with an integer.
 
 - Default Constructor: It will set the sign of the bigint number to `sign::zero` and push a single value of 0 into the `digits` vector.
 
