@@ -76,8 +76,8 @@ private:
      *
      */
     vector<uint8_t> digits;
-    void fill_digits(const string);
-    bool is_digit(const string) const;
+    void fill_digits(const string &);
+    bool is_digit(const string &) const;
     bool is_abs_greater(const bigint &) const;
     void zero_remover();
 };
@@ -205,7 +205,7 @@ bigint::bigint(const string &input_string)
  * @return false If the string has any non-digit characters.
  */
 // Start: check a string with character classification functions, source https://baraksh.com/CSE701/notes.php#io-error-handling
-bool bigint::is_digit(const string input_string) const
+bool bigint::is_digit(const string &input_string) const
 {
     for (const char &c : input_string)
         if (!isdigit(c))
@@ -223,7 +223,7 @@ bool bigint::is_digit(const string input_string) const
  *
  * @param input_string An input string representing a bigint number.
  */
-void bigint::fill_digits(const string input_string)
+void bigint::fill_digits(const string &input_string)
 {
     if (input_string[0] == '0')
         throw leading_zeros;
